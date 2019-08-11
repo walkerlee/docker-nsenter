@@ -1,7 +1,10 @@
+FROM alpine:3.10 as builder
+RUN apk add --no-cache util-linux
+
 FROM scratch
 
-COPY ./nsenter /
-COPY ./ld-musl-x86_64.so.1 /lib/
+COPY --from=builder /usr/bin/nsenter /usr/bin/
+COPY --from=builder /lib//ld-musl-x86_64.so.1 /lib/
 
-ENTRYPOINT ["/nsenter"]
+ENTRYPOINT ["/usr/bin/nsenter"]
 CMD ["--help"]
